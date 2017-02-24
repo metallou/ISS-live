@@ -7,6 +7,8 @@ class Panel
         this.elem = document.getElementById(id);
         this.masters = [];
         this.slaves = [];
+        this.img = this.elem.getElementsByClassName("transformButton")[0];
+        this.loadConfig();
     }
     createEventListener()
     {
@@ -74,8 +76,15 @@ class Panel
     }
     moveYourAssSoldier(e)
     {
-        this.classList.toggle("active");
         let obj = PANELS.search(this.parentNode);
+        obj.toggleStyle("active");
+        if(obj.containsStyle("active")) {
+            obj.img.src = obj.img2;
+            console.log("A");
+        } else {
+            obj.img.src = obj.img1;
+            console.log("B");
+        }
         if(obj.obeyYourMaster()) {
             obj.toggleStyle("hidden");
             if(obj.hasMasters()) {
@@ -166,19 +175,23 @@ const panelTransformReady = function()
     let br = new Panel("bottomright");
     let t = new Panel("top");
     let b = new Panel("bottom");
-    let l = new Panel("left");
-    let r = new Panel("right");
+    let l1 = new Panel("left1");
+    let l2 = new Panel("left2");
+    let r1 = new Panel("right1");
+    let r2 = new Panel("right2");
 
-    tl.addMasters(t,l);
-    tr.addMasters(t,r);
-    bl.addMasters(b,l);
-    br.addMasters(b,r);
+    tl.addMasters(t,l1);
+    tr.addMasters(t,r1);
+    bl.addMasters(b,l2);
+    br.addMasters(b,r2);
     t.addSlaves(tl,tr);
     b.addSlaves(bl,br);
-    l.addSlaves(tl,bl);
-    r.addSlaves(tr,br);
+    l1.addSlaves(tl);
+    l2.addSlaves(bl);
+    r1.addSlaves(tr);
+    r2.addSlaves(br);
 
-    PANELS.insertAll(tl,tr,bl,br,t,b,l,r);
+    PANELS.insertAll(tl,tr,bl,br,t,b,l1,l2,r1,r2);
 
     PANELS.createEventListeners();
 
@@ -195,8 +208,6 @@ const panelTransformReady = function()
                 }
                 PANELS.saveConfigs();
             });
-
-    PANELS.loadConfigs();
 }
 document.addEventListener("DOMContentLoaded", function()
         {
